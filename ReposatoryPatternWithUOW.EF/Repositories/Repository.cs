@@ -240,10 +240,9 @@ namespace RepositoryPatternWithUOW.EF.Repositories
                 AssignmentId=dto.AssignmentId,
                 StudentId=dto.StudentId
             };
-            if (await context.Students.AnyAsync(s=>s.UserId==dto.StudentId))
-            {
-
-            }
+            if (!await context.Students.AnyAsync(s=>s.UserId==dto.StudentId))
+                return false;
+            
             if (dto.SolutionFileUrl != null && dto.SolutionFileUrl.Length != 0)
             {
                 var extintion= Path.GetExtension(dto.SolutionFileUrl.FileName);

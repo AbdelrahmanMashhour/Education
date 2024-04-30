@@ -54,7 +54,7 @@ namespace RepositoryPatternWithUOW.EF.Reposatories
                 };
 
             }
-            var expirationOfJWT = DateTime.Now.AddMinutes(1.5);
+            var expirationOfJWT = DateTime.Now.AddMinutes(15);
             var expirationOfRefreshToken = DateTime.Now.AddHours(6);
             var refreshToken = new RefreshToken()
             {
