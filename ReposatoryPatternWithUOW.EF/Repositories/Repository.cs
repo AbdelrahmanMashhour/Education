@@ -764,7 +764,9 @@ namespace RepositoryPatternWithUOW.EF.Repositories
 
         public async Task<IEnumerable<StudenPayment>> GetStudenPaymentByCourseId(int courseId)
         {
-            var studenCourses = await context.StudentCourse.Where(x => x.CourseId == courseId).ToListAsync();
+            context.ChangeTracker.LazyLoadingEnabled = false;
+
+            var studenCourses = await context.StudentCourse.Include(x=>x.Course).Include(x=>x.Student).Where(x => x.CourseId == courseId).AsNoTracking().ToListAsync();
             var studentPayment = new StudenPayment();
             var studentPayments = new List<StudenPayment>();
             foreach (var studentCourse in studenCourses)
@@ -773,6 +775,8 @@ namespace RepositoryPatternWithUOW.EF.Repositories
                 studentPayment.LastName= studentCourse.Student.LastName;
                 studentPayment.Email= studentCourse.Student.Email;
                 studentPayment.JoinedAt = studentCourse.JoinedAt;
+                studentPayment.Stage = studentCourse.Course.CoursStage;
+                studentPayment.CourseName = studentCourse.Course.CourseName;
 
                 studentPayments.Add(studentPayment);
             }

@@ -258,7 +258,7 @@ namespace RepositoryPatternWithUOW.EF.Reposatories
                 return new UpdatedTokens() { Success = false };
             }
 
-            var expirationOfJwt = DateTime.Now.AddMinutes(1.5);
+            var expirationOfJwt = DateTime.Now.AddMinutes(15);
             var expirationOfRefreshToken = DateTime.Now.AddHours(24);
             var jwt = TokensGenerator.GenerateToken(tokenObj.User, expirationOfJwt, options);
             var newRefreshToken = TokensGenerator.GenerateToken();
@@ -306,7 +306,7 @@ namespace RepositoryPatternWithUOW.EF.Reposatories
         {
             //var stud = await context.Students.ToListAsync();
             //var users = await context.Users.ToListAsync();
-            var allStudents= await context.Students.Where(x=>x.Blocked==bloked).AsNoTracking().ToListAsync();
+            var allStudents= await context.Students.Where(x=>x.Blocked==bloked&&x.EmailConfirmed).AsNoTracking().ToListAsync();
 
             var studentsDto= new List<StudentDto>();
             foreach (var student in allStudents)
