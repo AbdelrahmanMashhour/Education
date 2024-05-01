@@ -16,6 +16,7 @@ using RepositoryPatternWithUOW.EfCore.Mapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO.Compression;
 using System.Linq;
 using System.Linq.Expressions;
@@ -88,19 +89,19 @@ namespace RepositoryPatternWithUOW.EF.Repositories
         public async Task<int> AddUnitAsync(UnitDto unitDto)
         {
             var unite = new Unite();
-            Func<IFormFile, string,string,Task<string>> AddFile = async(file, path,fileName) =>
+            Func<IFormFile, string,Task<string>> AddFile = async(file,fileName) =>
             {
                 if (file != null && file.Length != 0)
                 {
-
-                    var filePath = Path.Combine($"wwwroot/{path}", fileName);
+                    //Path.Combine(webHostEnvironment.WebRootPath, fileName);
+                    var filePath = Path.Combine($"wwwroot", fileName);
 
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await file.CopyToAsync(stream);
 
                     }
-                    return $"/{path}/{fileName}";
+                    return $"/{fileName}";
                 }
                 return null;
             };
@@ -119,29 +120,29 @@ namespace RepositoryPatternWithUOW.EF.Repositories
             s8= Guid.NewGuid().ToString() + Path.GetExtension(unitDto.SkillPdf?.FileName);
             s9= Guid.NewGuid().ToString() + Path.GetExtension(unitDto.TranslationPdf?.FileName);
 
-            unite.ExamUrl =unitDto.Exam is not null? "/Videos/"+s1:null;
-            unite.SkillUrl = unitDto.Skill is not null ? "/Videos/" + s2:null;
-            unite.TranslationUrl = unitDto.Translation is not null ? "/Videos/" +s3:null;
-            unite.StoryUrl = unitDto.Story is not null ? "/Videos/" + s4:null;
-            unite.VocablaryUrl = unitDto.Vocablary is not null ? "/Videos/" +s5:null;
-            unite.VocablaryPdfUrl = unitDto.VocablaryPdf is not null ? "/Videos/Pdfs/" + s6:null;
-            unite.StoryPdfUrl = unitDto.StoryPdf is not null ? "/Videos/Pdfs/" + s7:null;
-            unite.SkillPdfUrl = unitDto.SkillPdf is not null ? "/Videos/Pdfs/" +s8:null;
-            unite.TranslationPdfUrl = unitDto.TranslationPdf is not null ? "/Videos/Pdfs/" +s9:null;
+            unite.ExamUrl =unitDto.Exam is not null? "/"+s1:null;
+            unite.SkillUrl = unitDto.Skill is not null ? "/" + s2:null;
+            unite.TranslationUrl = unitDto.Translation is not null ? "/" +s3:null;
+            unite.StoryUrl = unitDto.Story is not null ? "/" + s4:null;
+            unite.VocablaryUrl = unitDto.Vocablary is not null ? "/" +s5:null;
+            unite.VocablaryPdfUrl = unitDto.VocablaryPdf is not null ? "/" + s6:null;
+            unite.StoryPdfUrl = unitDto.StoryPdf is not null ? "/" + s7:null;
+            unite.SkillPdfUrl = unitDto.SkillPdf is not null ? "/" +s8:null;
+            unite.TranslationPdfUrl = unitDto.TranslationPdf is not null ? "/" +s9:null;
 
 
-            t1 =AddFile(unitDto.Exam, "Videos", s1);
+            t1 =AddFile(unitDto.Exam, s1);
 
-            t2 = AddFile(unitDto.Skill, "Videos", s2);
+            t2 = AddFile(unitDto.Skill, s2);
 
-            t3=AddFile(unitDto.Translation, "Videos",s3);    
-            t4=AddFile(unitDto.Story, "Videos",s4);
-            t5=AddFile(unitDto.Vocablary, "Videos",s5);
+            t3=AddFile(unitDto.Translation,s3);    
+            t4=AddFile(unitDto.Story,s4);
+            t5=AddFile(unitDto.Vocablary,s5);
 
-            t6=AddFile(unitDto.VocablaryPdf, "Videos/Pdfs",s6);
-            t7=AddFile(unitDto.StoryPdf, "Videos/Pdfs", s7);
-            t8=AddFile(unitDto.SkillPdf, "Videos/Pdfs", s8);
-            t9=AddFile(unitDto.TranslationPdf, "Videos/Pdfs",s9);
+            t6=AddFile(unitDto.VocablaryPdf,s6);
+            t7=AddFile(unitDto.StoryPdf, s7);
+            t8=AddFile(unitDto.SkillPdf, s8);
+            t9=AddFile(unitDto.TranslationPdf,s9);
 
 
             unite.CourseId = unitDto.CourseId;
@@ -210,14 +211,14 @@ namespace RepositoryPatternWithUOW.EF.Repositories
                 string? filePath;
                 if (extintion==".txt")
                 {
-                     filePath = Path.Combine("wwwroot/Assignments/Txts", fileName);
-                    assignment.AssFiles = $"/Assignments/Txts/{fileName}";
+                     filePath = Path.Combine("wwwroot", fileName);
+                    assignment.AssFiles = $"/{fileName}";
 
                 }
                 else if (extintion.Equals(".pdf",StringComparison.OrdinalIgnoreCase) || extintion.Equals(".docx", StringComparison.OrdinalIgnoreCase))
                 {
-                     filePath = Path.Combine("wwwroot/Assignments/Pdfs", fileName);
-                    assignment.AssFiles = $"/Assignments/Pdfs/{fileName}";
+                     filePath = Path.Combine("wwwroot", fileName);
+                    assignment.AssFiles = $"/{fileName}";
                 }
                 else
                     return false;
@@ -250,14 +251,14 @@ namespace RepositoryPatternWithUOW.EF.Repositories
                 string? filePath;
                 if (extintion == ".txt")
                 {
-                    filePath = Path.Combine("wwwroot/Solutions/Txts", fileName);
-                    solution.SolutionFileUrl= $"/Solutions/Txts/{fileName}";
+                    filePath = Path.Combine("wwwroot", fileName);
+                    solution.SolutionFileUrl= $"/{fileName}";
 
                 }
                 else if (extintion.Equals(".pdf", StringComparison.OrdinalIgnoreCase) || extintion.Equals(".docx", StringComparison.OrdinalIgnoreCase))
                 {
-                    filePath = Path.Combine("wwwroot/Solutions/Pdfs", fileName);
-                    solution.SolutionFileUrl = $"/Solutions/Pdfs/{fileName}";
+                    filePath = Path.Combine("wwwroot", fileName);
+                    solution.SolutionFileUrl = $"/{fileName}";
                 }
                 else
                     return false;
@@ -276,6 +277,7 @@ namespace RepositoryPatternWithUOW.EF.Repositories
 
         public async Task<bool> GiveGradeToStudent(GradeDto dto)
         {
+
             var solution = await context.Set<Solution>().SingleOrDefaultAsync(x=>x.AssignmentId==dto.AssignmentId&&x.StudentId==dto.StudentId);
             if(solution == null)
                 return false;
@@ -391,11 +393,16 @@ namespace RepositoryPatternWithUOW.EF.Repositories
             {
                 return $"You Don't have this Course id {dto.CourseId} ";
             }
-            var studentCourse=new StudentCourse 
+            var JoinedAtStr = DateOnly.FromDateTime(DateTime.Now).ToString("dd/MM/yyyy");
+            var studentCourse = new StudentCourse
             {
                 CourseId = dto.CourseId,
-                StudentId=student.UserId
-            };
+                StudentId = student.UserId,
+                
+             JoinedAt = DateOnly.ParseExact(JoinedAtStr, "dd/MM/yyyy", CultureInfo.InvariantCulture)
+
+
+        };
             await context.AddAsync(studentCourse);
             return "Sucsess Process";
 
@@ -622,17 +629,11 @@ namespace RepositoryPatternWithUOW.EF.Repositories
 
                     var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     var extention = Path.GetExtension(fileName);
-                    string folderPath="";
-                    if (extention == ".pdf" || extention == ".docx" || extention == ".txt")
-                    {
-                        folderPath = "/Pdfs";
-                    }
-                    
+                  
 
-                    var filePath = Path.Combine("wwwroot/Videos"+folderPath, fileName);
+                    var filePath = Path.Combine("wwwroot", fileName);
 
-                    folderPath = folderPath is not "" ? folderPath + "/" : folderPath;
-                    fileUrl = $"/Videos{folderPath}{fileName}";
+                    fileUrl = $"/{fileName}";
 
 
                     using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
@@ -761,6 +762,21 @@ namespace RepositoryPatternWithUOW.EF.Repositories
             return await context.StudentCourse.AnyAsync(st=>st.StudentId==studentId && st.CourseId==courseId);
         }
 
+        public async Task<IEnumerable<StudenPayment>> GetStudenPaymentByCourseId(int courseId)
+        {
+            var studenCourses = await context.StudentCourse.Where(x => x.CourseId == courseId).ToListAsync();
+            var studentPayment = new StudenPayment();
+            var studentPayments = new List<StudenPayment>();
+            foreach (var studentCourse in studenCourses)
+            {
+                studentPayment.FirstName= studentCourse.Student.FirstName;
+                studentPayment.LastName= studentCourse.Student.LastName;
+                studentPayment.Email= studentCourse.Student.Email;
+                studentPayment.JoinedAt = studentCourse.JoinedAt;
 
+                studentPayments.Add(studentPayment);
+            }
+            return studentPayments;
+        }
     }
 }

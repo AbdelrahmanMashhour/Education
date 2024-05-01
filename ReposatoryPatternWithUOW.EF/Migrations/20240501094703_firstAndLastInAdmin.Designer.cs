@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RepositoryPatternWithUOW.EF;
 
@@ -11,9 +12,11 @@ using RepositoryPatternWithUOW.EF;
 namespace RepositoryPatternWithUOW.EF.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240501094703_firstAndLastInAdmin")]
+    partial class firstAndLastInAdmin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,9 +168,6 @@ namespace RepositoryPatternWithUOW.EF.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("JoinedAt")
-                        .HasColumnType("date");
-
                     b.HasKey("CourseId", "StudentId");
 
                     b.HasIndex("StudentId");
@@ -306,7 +306,7 @@ namespace RepositoryPatternWithUOW.EF.Migrations
                             EmailConfirmed = true,
                             FirstName = "The Knight",
                             LastName = "Platform",
-                            Password = "$2a$11$iipr.lXhOipStCzx3efa6eGnAK9klmKacHJ/njHOsl2NCpfKIXQK.",
+                            Password = "$2a$11$YiLhW/zYz/2DnckdKXI6T.8OFUt/XI6ZUFVhS3ab757HT8FhQPeuu",
                             Role = "Admin"
                         });
                 });

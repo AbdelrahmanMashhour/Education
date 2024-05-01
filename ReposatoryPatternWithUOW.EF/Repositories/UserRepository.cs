@@ -111,7 +111,7 @@ namespace RepositoryPatternWithUOW.EF.Reposatories
                 return false;
             }
         }
-        public async Task<bool> SendVerficationCode(string email, bool IsForResetingPassword = false)
+        public async Task<bool> SendVerficationCode(string email, bool? IsForResetingPassword = false)
         {
             context.ChangeTracker.LazyLoadingEnabled = false;
             var user = await context.Users.AsNoTracking().Include(x => x.EmailVerificationCode).FirstOrDefaultAsync(x => x.Email == email);
@@ -128,7 +128,7 @@ namespace RepositoryPatternWithUOW.EF.Reposatories
             context.Update(user);
             string body;
             string subject;
-            if (!IsForResetingPassword)
+            if (IsForResetingPassword is null ||  IsForResetingPassword ==false)
             {
                 body = $"Dear {email} ,\n you have signed up on our Educationl application, \nand we have sent to you a verification code which is : <b>{verificationNum}</b> ";
                 subject = "Email Confirmation";

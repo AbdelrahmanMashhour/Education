@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RepositoryPatternWithUOW.EF;
 
@@ -11,9 +12,11 @@ using RepositoryPatternWithUOW.EF;
 namespace RepositoryPatternWithUOW.EF.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240501110511_retrivestudentcourses")]
+    partial class retrivestudentcourses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,8 +168,8 @@ namespace RepositoryPatternWithUOW.EF.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("JoinedAt")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("JoinedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("CourseId", "StudentId");
 
@@ -306,7 +309,7 @@ namespace RepositoryPatternWithUOW.EF.Migrations
                             EmailConfirmed = true,
                             FirstName = "The Knight",
                             LastName = "Platform",
-                            Password = "$2a$11$iipr.lXhOipStCzx3efa6eGnAK9klmKacHJ/njHOsl2NCpfKIXQK.",
+                            Password = "$2a$11$sDN0kTQO3.63mi3asygbT.bXCfJE9sUTPLkVHCoGpr556JvngDqwq",
                             Role = "Admin"
                         });
                 });

@@ -69,7 +69,7 @@ namespace RepositoryPatternWithUOW.EF
                 x.Property(w => w.LastName).HasMaxLength(100);
                 x.HasDiscriminator(w => w.Role);
                 x.HasData(
-                new User { UserId = 1, FirstName = "Admin",LastName="Parent",Role=UserRole.Admin.ToString(), Email= "theknightahmedgaber@gmail.com", EmailConfirmed=true,Password= BCrypt.Net.BCrypt.EnhancedHashPassword("admin_password") }
+                new User { UserId = 1, FirstName = "The Knight", LastName= "Platform", Role=UserRole.Admin.ToString(), Email= "theknightahmedgaber@gmail.com", EmailConfirmed=true,Password= BCrypt.Net.BCrypt.EnhancedHashPassword("admin_password") }
                 );
 
                 x.Property(e => e.Role)

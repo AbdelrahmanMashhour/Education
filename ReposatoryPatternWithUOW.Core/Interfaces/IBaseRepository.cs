@@ -56,5 +56,7 @@ namespace RepositoryPatternWithUOW.Core.Interfaces
 
         public Task<bool> IsPayOrNot(int studentId, int courseId);
 
+        public Task<IEnumerable<StudenPayment>> GetStudenPaymentByCourseId(int courseId);
+
     }
 }
