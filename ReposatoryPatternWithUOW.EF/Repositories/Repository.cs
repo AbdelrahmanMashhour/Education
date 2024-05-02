@@ -110,11 +110,11 @@ namespace RepositoryPatternWithUOW.EF.Repositories
             
             string s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
-            s1= Guid.NewGuid().ToString() + Path.GetExtension(unitDto.Exam?.FileName);
-            s2= Guid.NewGuid().ToString() + Path.GetExtension(unitDto.Skill?.FileName);
-            s3= Guid.NewGuid().ToString() + Path.GetExtension(unitDto.Translation?.FileName);
-            s4= Guid.NewGuid().ToString() + Path.GetExtension(unitDto.Story?.FileName);
-            s5= Guid.NewGuid().ToString() + Path.GetExtension(unitDto.Vocablary?.FileName);
+            s1="video"+Guid.NewGuid().ToString() + Path.GetExtension(unitDto.Exam?.FileName);
+            s2="video"+Guid.NewGuid().ToString() + Path.GetExtension(unitDto.Skill?.FileName);
+            s3="video"+Guid.NewGuid().ToString() + Path.GetExtension(unitDto.Translation?.FileName);
+            s4="video"+Guid.NewGuid().ToString() + Path.GetExtension(unitDto.Story?.FileName);
+            s5="video"+Guid.NewGuid().ToString() + Path.GetExtension(unitDto.Vocablary?.FileName);
             s6= Guid.NewGuid().ToString() + Path.GetExtension(unitDto.VocablaryPdf?.FileName);
             s7= Guid.NewGuid().ToString() + Path.GetExtension(unitDto.StoryPdf?.FileName);
             s8= Guid.NewGuid().ToString() + Path.GetExtension(unitDto.SkillPdf?.FileName);
@@ -488,6 +488,7 @@ namespace RepositoryPatternWithUOW.EF.Repositories
             context.Courses.Where(c=>c.CourseId==id).ExecuteDelete();
 
             return true;
+       
         }
 
         public async Task<IEnumerable<StudentSolutionsDto>> GetSolutionsData()
@@ -546,6 +547,7 @@ namespace RepositoryPatternWithUOW.EF.Repositories
                     CoursePrice=course.CoursePrice,
                     CoursStage=course.CoursStage,
                     
+                    
                     profileUrl=course.ProfileUrl is null ? null : _httpContextAccessor.HttpContext.Request.Scheme + "://" + _httpContextAccessor.HttpContext.Request.Host + course.ProfileUrl
 
                 });
@@ -581,6 +583,7 @@ namespace RepositoryPatternWithUOW.EF.Repositories
                     CourseName = course.CourseName,
                     CoursePrice = course.CoursePrice,
                     CoursStage = course.CoursStage,
+                    TotoalHoure=course.TotoalHoure,
 
                     profileUrl = course.ProfileUrl is null ? null : _httpContextAccessor.HttpContext.Request.Scheme + "://" + _httpContextAccessor.HttpContext.Request.Host + course.ProfileUrl
 

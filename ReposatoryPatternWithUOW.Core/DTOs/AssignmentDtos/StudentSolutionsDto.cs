@@ -16,6 +16,7 @@ namespace RepositoryPatternWithUOW.Core.DTOs.AssignmentDtos
         public Stages? Stage { get; set; }
         public string? CourseName { get; set; }
         public int? FullMark { get; set; }
+       
         public string? SolutionUrl { get; set; }
     }
 }

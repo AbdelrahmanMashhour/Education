@@ -13,6 +13,8 @@ namespace RepositoryPatternWithUOW.EF
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Admin> Admins { get; set; }
+        public DbSet<IdentityTokenVerification> IdentityTokenVerifications { get; set; }
+
         public DbSet<Student> Students { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Unite> Unites { get; set; }
@@ -100,8 +102,14 @@ namespace RepositoryPatternWithUOW.EF
 
             //    x.HasOne(x => x.Student).WithOne(x => x.Solution).HasForeignKey<Solution>(x=>x.StudentId);
             //    x.HasOne(x => x.Assignment).WithMany(x => x.Solutions).HasForeignKey(x => x.AssignmentId);
-                
+
             //});
+            modelBuilder.Entity<IdentityTokenVerification>(x =>
+            {
+                x.HasOne(e => e.User).WithOne(x => x.IdentityTokenVerification).HasForeignKey<IdentityTokenVerification>(x => x.UserId);
+                x.Property(x => x.Token).HasMaxLength(100);
+                x.HasKey(x =>  new{x.UserId,x.Token});
+            });
             modelBuilder.Entity<StudentPhones>(x =>
             {
                 x.HasKey(x => new { x.StudentId, x.Phone, x.DadPhone });

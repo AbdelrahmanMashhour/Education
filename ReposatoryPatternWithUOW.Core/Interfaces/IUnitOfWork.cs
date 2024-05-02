@@ -11,6 +11,8 @@ namespace RepositoryPatternWithUOW.Core.Interfaces
     public interface IUnitOfWork
     {
         public IUserRepository UserRepository { get; }
+
+        public IBaseRepository<IdentityTokenVerification> IdentityTokenVerification { get; }
         public IBaseRepository<Course> CourseRepository { get; }
         public IBaseRepository<Unite> UniteRepository { get; }
         public IBaseRepository<Student> StudentRepository { get; }

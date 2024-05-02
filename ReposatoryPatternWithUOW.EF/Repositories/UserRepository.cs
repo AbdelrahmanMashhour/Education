@@ -111,17 +111,19 @@ namespace RepositoryPatternWithUOW.EF.Reposatories
                 return false;
             }
         }
-        public async Task<bool> SendVerficationCode(string email, bool? IsForResetingPassword = false)
+        public async Task<string?> SendVerficationCode(string email, bool? IsForResetingPassword = false)
         {
             context.ChangeTracker.LazyLoadingEnabled = false;
-            var user = await context.Users.AsNoTracking().Include(x => x.EmailVerificationCode).FirstOrDefaultAsync(x => x.Email == email);
+            var user = await context.Users.AsNoTracking().Include(x => x.EmailVerificationCode).Include(x=>x.IdentityTokenVerification).FirstOrDefaultAsync(x => x.Email == email);
 
             if (user is null)
-                return false;
+                return null;
             if (user.EmailVerificationCode is not null && user.EmailVerificationCode.ExpiresAt < DateTime.Now.AddSeconds(-5))
                 context.Remove(user.EmailVerificationCode);
             else if (user.EmailVerificationCode is not null)
-                return true;
+            {
+                return "sent";
+            }
             var rand = new Random();
             var verificationNum = rand.Next(100000, int.MaxValue);
             user.EmailVerificationCode = new() { ExpiresAt = DateTime.Now.AddMinutes(2), Code = verificationNum.ToString() };
@@ -139,18 +141,30 @@ namespace RepositoryPatternWithUOW.EF.Reposatories
                 subject = "Reset Password";
             }
             Task t1, t2;
+            if(user.IdentityTokenVerification is not null)
+            context.Remove(user.IdentityTokenVerification);
+            var identityToken = TokensGenerator.GenerateToken();
+            user.IdentityTokenVerification = new()
+            {
+                ExpirationDate = DateTime.Now.AddMinutes(25),
+                UserId = user.UserId,
+                Token = identityToken
+            };
+          
             t1=senderService.SendEmailAsync(email, subject, body);
             t2 = context.SaveChangesAsync();
             await Task.WhenAll(t1, t2);
 
-            return true;
+            return identityToken;
 
         }
-        public async Task<bool> ValidateCode(string email, string code, bool isForResetPassword = false)
+        public async Task<bool> ValidateCode(string email,string identityToken, string code, bool isForResetPassword = false)
         {
             context.ChangeTracker.LazyLoadingEnabled = false;
-            var user = await context.Users.Include(x => x.EmailVerificationCode).AsNoTracking().FirstOrDefaultAsync(x => x.Email == email);
-            if (user is null || user.EmailVerificationCode is null)
+            
+            var user = await context.Users.Include(x=>x.EmailVerificationCode).Include(x=>x.IdentityTokenVerification).FirstOrDefaultAsync(x => x.IdentityTokenVerification.Token == identityToken&&x.Email==email);
+
+            if (user is null || user.EmailVerificationCode is null||user.IdentityTokenVerification.ExpirationDate<DateTime.Now)
                 return false;
 
             if (user.EmailVerificationCode.Code != code)
@@ -170,20 +184,25 @@ namespace RepositoryPatternWithUOW.EF.Reposatories
             if (!isForResetPassword)
             {
                 user.EmailConfirmed = true;
+                context.Remove(user.IdentityTokenVerification);
                 context.Update(user);
             }
             context.Remove(user.EmailVerificationCode);
             return true;
 
         }
-        public async Task<bool> ResetPassword(ResetPasswordDto resetPasswordDto)
+        public async Task<bool> ResetPassword(ResetPasswordDto resetPasswordDto, string identityToken)
         {
             context.ChangeTracker.LazyLoadingEnabled = false;
-            var user = await context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email == resetPasswordDto.Email);
+            var user = await context.Users.Include(x=>x.IdentityTokenVerification).AsNoTracking().FirstOrDefaultAsync(x => x.Email == resetPasswordDto.Email&&x.IdentityTokenVerification.Token==identityToken);
             if (user is null)
                 return false;
+            if (user.IdentityTokenVerification.ExpirationDate < DateTime.Now)
+                return false;
             user.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(resetPasswordDto.NewPassword);
-            context.Users.Update(user);
+            context.Update(user);
+            context.IdentityTokenVerifications.Remove(user.IdentityTokenVerification);
+           
             return true;
 
         }

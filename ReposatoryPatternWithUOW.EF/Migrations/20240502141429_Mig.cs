@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RepositoryPatternWithUOW.EF.Migrations
 {
     /// <inheritdoc />
-    public partial class profileOfUser4 : Migration
+    public partial class Mig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -79,6 +79,25 @@ namespace RepositoryPatternWithUOW.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "IdentityTokenVerifications",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Token = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IdentityTokenVerifications", x => new { x.UserId, x.Token });
+                    table.ForeignKey(
+                        name: "FK_IdentityTokenVerifications_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RefreshToken",
                 columns: table => new
                 {
@@ -123,7 +142,8 @@ namespace RepositoryPatternWithUOW.EF.Migrations
                 columns: table => new
                 {
                     StudentId = table.Column<int>(type: "int", nullable: false),
-                    CourseId = table.Column<int>(type: "int", nullable: false)
+                    CourseId = table.Column<int>(type: "int", nullable: false),
+                    JoinedAt = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -132,12 +152,14 @@ namespace RepositoryPatternWithUOW.EF.Migrations
                         name: "FK_StudentCourse_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
-                        principalColumn: "CourseId");
+                        principalColumn: "CourseId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_StudentCourse_Users_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Users",
-                        principalColumn: "UserId");
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -219,7 +241,7 @@ namespace RepositoryPatternWithUOW.EF.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "UserId", "Email", "EmailConfirmed", "FirstName", "LastName", "Password", "ProfilePictureUrl", "Role" },
-                values: new object[] { 1, "theknightahmedgaber@gmail.com", true, "Admin", "Parent", "$2a$11$u8nmF96YnCJTtZF98Nncwu9LGDg9UcFjKHud8aLFWdSKRIVWkygzy", null, "Admin" });
+                values: new object[] { 1, "theknightahmedgaber@gmail.com", true, "The Knight", "Platform", "$2a$11$yUOV0Q5kufS27bPDIAGXuesLzrz4EpQE.aK1iUp/FxaK6e2rP/OC.", null, "Admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Assignment_UniteId",
@@ -234,6 +256,12 @@ namespace RepositoryPatternWithUOW.EF.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_EmailVerificationCode_UserId",
                 table: "EmailVerificationCode",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IdentityTokenVerifications_UserId",
+                table: "IdentityTokenVerifications",
                 column: "UserId",
                 unique: true);
 
@@ -264,6 +292,9 @@ namespace RepositoryPatternWithUOW.EF.Migrations
         {
             migrationBuilder.DropTable(
                 name: "EmailVerificationCode");
+
+            migrationBuilder.DropTable(
+                name: "IdentityTokenVerifications");
 
             migrationBuilder.DropTable(
                 name: "RefreshToken");

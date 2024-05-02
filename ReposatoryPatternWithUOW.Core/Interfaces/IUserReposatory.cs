@@ -15,9 +15,9 @@ namespace RepositoryPatternWithUOW.Core.Interfaces
     {
         public Task<bool> SignUpAsync(SignUpDto obj);
         public Task<LoginResult> LoginAsync(LoginDto obj);
-        public Task<bool> SendVerficationCode(string email, bool? IsForResetingPassword = false);
-        public Task<bool> ValidateCode(string email, string code, bool isForResetPassword = false);
-        public Task<bool> ResetPassword(ResetPasswordDto resetPasswordDto);
+        public Task<string> SendVerficationCode(string email, bool? IsForResetingPassword = false);
+        public Task<bool> ValidateCode(string email,string identityToken, string code, bool isForResetPassword = false);
+        public Task<bool> ResetPassword(ResetPasswordDto resetPasswordDto,string identityToken);
         public Task<bool> UpdatePasswordAsync(string email, UpdatePasswordDto updatePasswordDto);
 
         public Task<bool> UpdateProfilePicture(UpdatePictureDto updatePictureDto);

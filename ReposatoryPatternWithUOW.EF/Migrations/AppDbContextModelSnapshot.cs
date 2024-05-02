@@ -113,6 +113,26 @@ namespace RepositoryPatternWithUOW.EF.Migrations
                     b.ToTable("EmailVerificationCode");
                 });
 
+            modelBuilder.Entity("RepositoryPatternWithUOW.Core.Models.IdentityTokenVerification", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Token")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("UserId", "Token");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("IdentityTokenVerifications");
+                });
+
             modelBuilder.Entity("RepositoryPatternWithUOW.Core.Models.RefreshToken", b =>
                 {
                     b.Property<int>("UserId")
@@ -306,7 +326,7 @@ namespace RepositoryPatternWithUOW.EF.Migrations
                             EmailConfirmed = true,
                             FirstName = "The Knight",
                             LastName = "Platform",
-                            Password = "$2a$11$iipr.lXhOipStCzx3efa6eGnAK9klmKacHJ/njHOsl2NCpfKIXQK.",
+                            Password = "$2a$11$yUOV0Q5kufS27bPDIAGXuesLzrz4EpQE.aK1iUp/FxaK6e2rP/OC.",
                             Role = "Admin"
                         });
                 });
@@ -362,6 +382,17 @@ namespace RepositoryPatternWithUOW.EF.Migrations
                     b.HasOne("RepositoryPatternWithUOW.Core.Models.User", "User")
                         .WithOne("EmailVerificationCode")
                         .HasForeignKey("RepositoryPatternWithUOW.Core.Models.EmailVerificationCode", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RepositoryPatternWithUOW.Core.Models.IdentityTokenVerification", b =>
+                {
+                    b.HasOne("RepositoryPatternWithUOW.Core.Models.User", "User")
+                        .WithOne("IdentityTokenVerification")
+                        .HasForeignKey("RepositoryPatternWithUOW.Core.Models.IdentityTokenVerification", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -459,6 +490,9 @@ namespace RepositoryPatternWithUOW.EF.Migrations
             modelBuilder.Entity("RepositoryPatternWithUOW.Core.Models.User", b =>
                 {
                     b.Navigation("EmailVerificationCode")
+                        .IsRequired();
+
+                    b.Navigation("IdentityTokenVerification")
                         .IsRequired();
 
                     b.Navigation("RefreshTokens");

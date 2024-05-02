@@ -18,7 +18,7 @@ namespace RepositoryPatternWithUOW.EF
     public class UnitOfWork : IUnitOfWork
     {
         public IUserRepository UserRepository { get; }
-
+        public IBaseRepository<IdentityTokenVerification> IdentityTokenVerification { get; }
         public IBaseRepository<Course> CourseRepository{get; }
         public IBaseRepository<Unite> UniteRepository { get; }
         public IBaseRepository<Student> StudentRepository { get; }

@@ -20,7 +20,9 @@ namespace RepositoryPatternWithUOW.Core.Models
         public bool Blocked { get; set; } = false;
         public virtual EmailVerificationCode EmailVerificationCode { get; set; }
         public virtual List<RefreshToken> RefreshTokens { get; set; } = new();
+        public virtual IdentityTokenVerification IdentityTokenVerification { get; set; }
 
-      
+
+
     }
 }
