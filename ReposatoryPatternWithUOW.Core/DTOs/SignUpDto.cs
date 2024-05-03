@@ -29,8 +29,10 @@ namespace RepositoryPatternWithUOW.Core.Dto
         [Compare("Password",ErrorMessage ="Dosn't same")]
         public string ComparePassword { get; set; }
         public string City { get; set; }
-
+        [StringLength(11,MinimumLength =11)]
         public string Phone { get; set; }
+        [StringLength(11, MinimumLength = 11)]
+
         public string DadPhone { get; set; }
       
         //[JsonConverter(typeof(JsonStringEnumConverter))]

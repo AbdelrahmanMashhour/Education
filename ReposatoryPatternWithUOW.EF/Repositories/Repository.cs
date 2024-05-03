@@ -594,6 +594,7 @@ namespace RepositoryPatternWithUOW.EF.Repositories
             return courses;
         }
 
+  
 
         public async Task<bool> UpdateCourse(JsonPatchDocument<Course> dto,int id)
         {
@@ -784,6 +785,11 @@ namespace RepositoryPatternWithUOW.EF.Repositories
                 studentPayments.Add(studentPayment);
             }
             return studentPayments;
+        }
+
+        public async Task<bool> ExecuteDeleteAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await context.Set<T>().Where(predicate).ExecuteDeleteAsync()>0;
         }
     }
 }

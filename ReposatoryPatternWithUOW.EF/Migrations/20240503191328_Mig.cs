@@ -138,6 +138,25 @@ namespace RepositoryPatternWithUOW.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserConnection",
+                columns: table => new
+                {
+                    StudentId = table.Column<int>(type: "int", nullable: false),
+                    ConnectionId = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    RequestedToVideo = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserConnection", x => new { x.StudentId, x.ConnectionId });
+                    table.ForeignKey(
+                        name: "FK_UserConnection_Users_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "StudentCourse",
                 columns: table => new
                 {
@@ -241,7 +260,7 @@ namespace RepositoryPatternWithUOW.EF.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "UserId", "Email", "EmailConfirmed", "FirstName", "LastName", "Password", "ProfilePictureUrl", "Role" },
-                values: new object[] { 1, "theknightahmedgaber@gmail.com", true, "The Knight", "Platform", "$2a$11$yUOV0Q5kufS27bPDIAGXuesLzrz4EpQE.aK1iUp/FxaK6e2rP/OC.", null, "Admin" });
+                values: new object[] { 1, "theknightahmedgaber@gmail.com", true, "The Knight", "Platform", "$2a$11$RK/fA5T9ai6ZGcbSlDvB3uym9WflNKrI2A8rheUKNtBRqbTUmP8z6", null, "Admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Assignment_UniteId",
@@ -281,6 +300,12 @@ namespace RepositoryPatternWithUOW.EF.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserConnection_StudentId",
+                table: "UserConnection",
+                column: "StudentId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
                 table: "Users",
                 column: "Email",
@@ -307,6 +332,9 @@ namespace RepositoryPatternWithUOW.EF.Migrations
 
             migrationBuilder.DropTable(
                 name: "StudentPhones");
+
+            migrationBuilder.DropTable(
+                name: "UserConnection");
 
             migrationBuilder.DropTable(
                 name: "Assignment");

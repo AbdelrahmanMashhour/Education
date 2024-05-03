@@ -326,9 +326,29 @@ namespace RepositoryPatternWithUOW.EF.Migrations
                             EmailConfirmed = true,
                             FirstName = "The Knight",
                             LastName = "Platform",
-                            Password = "$2a$11$yUOV0Q5kufS27bPDIAGXuesLzrz4EpQE.aK1iUp/FxaK6e2rP/OC.",
+                            Password = "$2a$11$RK/fA5T9ai6ZGcbSlDvB3uym9WflNKrI2A8rheUKNtBRqbTUmP8z6",
                             Role = "Admin"
                         });
+                });
+
+            modelBuilder.Entity("RepositoryPatternWithUOW.Core.Models.UserConnection", b =>
+                {
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConnectionId")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool>("RequestedToVideo")
+                        .HasColumnType("bit");
+
+                    b.HasKey("StudentId", "ConnectionId");
+
+                    b.HasIndex("StudentId")
+                        .IsUnique();
+
+                    b.ToTable("UserConnection");
                 });
 
             modelBuilder.Entity("RepositoryPatternWithUOW.Core.Models.Admin", b =>
@@ -470,6 +490,17 @@ namespace RepositoryPatternWithUOW.EF.Migrations
                     b.Navigation("Course");
                 });
 
+            modelBuilder.Entity("RepositoryPatternWithUOW.Core.Models.UserConnection", b =>
+                {
+                    b.HasOne("RepositoryPatternWithUOW.Core.Models.Student", "Student")
+                        .WithOne("UserConnection")
+                        .HasForeignKey("RepositoryPatternWithUOW.Core.Models.UserConnection", "StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("RepositoryPatternWithUOW.Core.Models.Assignment", b =>
                 {
                     b.Navigation("Solutions");
@@ -510,6 +541,9 @@ namespace RepositoryPatternWithUOW.EF.Migrations
                     b.Navigation("StudentCourses");
 
                     b.Navigation("StudentPhones");
+
+                    b.Navigation("UserConnection")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

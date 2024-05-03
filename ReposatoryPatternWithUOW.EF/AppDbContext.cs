@@ -91,9 +91,14 @@ namespace RepositoryPatternWithUOW.EF
                 x.HasMany(x => x.Assignments)
                 .WithMany(x => x.Students)
                 .UsingEntity<Solution>(l=>l.HasOne(o=>o.Assignment).WithMany(w=>w.Solutions).HasForeignKey(f=>f.AssignmentId),r=>r.HasOne(s=>s.Student).WithMany(m=>m.Solution).HasForeignKey(s=>s.StudentId));
-                
+                x.HasOne(x => x.UserConnection).WithOne(x => x.Student).HasForeignKey<UserConnection>(x => x.StudentId);
 
 
+            });
+            modelBuilder.Entity<UserConnection>(x =>
+            {
+                x.HasKey(x => new { x.StudentId, x.ConnectionId });
+                x.Property(x => x.ConnectionId).HasMaxLength(255);
             });
             //modelBuilder.Entity<Solution>(x =>
             //{

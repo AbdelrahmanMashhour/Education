@@ -42,7 +42,7 @@ namespace RepositoryPatternWithUOW.Core.Interfaces
         public Task<string> AddStudentToCourse(PayInputDto dto);
         public Task<string> DeleteStudentToCourse(PayInputDto dto);
         public Task<bool> DeleteCourseById(int id);
-
+        public Task<bool> ExecuteDeleteAsync(Expression<Func<T, bool>> predicate);
         public Task<IEnumerable<StudentSolutionsDto>> GetSolutionsData();
 
         public Task<IEnumerable<RetriveCourses>> AllCoursesAsync();
